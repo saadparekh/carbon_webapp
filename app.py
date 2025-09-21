@@ -1,13 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import os
 import requests
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 CORS(app)
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+# ----------------- Home Route (Serve Frontend) -----------------
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 # ----------------- Chatbot -----------------
 @app.route("/chat", methods=["POST"])
@@ -89,4 +94,4 @@ def action_plan():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)

@@ -55,33 +55,7 @@
     .content { padding: 30px; display: none; }
     .content.active { display: block; animation: fadeIn 0.6s ease-in-out; }
 
-    /* Action Plan */
-    .welcome-section { text-align: center; margin-bottom: 30px; }
-    .welcome-section h2 { color: #2c3e50; margin-bottom: 15px; font-size: 1.8rem; }
-    .welcome-section p { color: #7f8c8d; line-height: 1.6; max-width: 700px; margin: 0 auto; }
-
-    .form-section { display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; }
-    .form-section label { font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
-    .form-section select, .form-section input {
-      padding: 12px 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; outline: none; transition: border 0.2s ease;
-    }
-    .form-section select:focus, .form-section input:focus { border-color: #27ae60; }
-    .form-section button {
-      margin-top: 15px; padding: 14px; background: #27ae60; color: white;
-      border: none; border-radius: 12px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: background 0.3s ease;
-    }
-    .form-section button:hover { background: #219653; }
-
-    .result-card {
-      margin-top: 25px; padding: 25px; background: #f0f9eb; border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); animation: slideUp 0.6s ease;
-    }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
-    .result-card h3 { color: #27ae60; margin-bottom: 10px; }
-    .result-card ul { margin-left: 20px; margin-top: 10px; }
-    .result-card ul li { margin-bottom: 8px; color: #2c3e50; }
-
-    /* WhatsApp Style Chat */
+    /* Chat Box */
     .chat-box {
       display: flex; flex-direction: column; height: 450px; border-radius: 12px;
       background: #ece5dd; overflow: hidden; border: 1px solid #ccc; position: relative;
@@ -94,9 +68,21 @@
       padding: 10px 14px; border-radius: 20px; max-width: 70%;
       font-size: 0.95rem; line-height: 1.4; position: relative;
     }
-    .msg.user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 5px; }
-    .msg.bot { background: #fff; align-self: flex-start; border-bottom-left-radius: 5px; border: 1px solid #ddd; }
-    .msg time { font-size: 0.7rem; color: #555; position: absolute; bottom: -15px; right: 10px; }
+    /* ✅ User green bubble */
+    .msg.user {
+      background: #34D399;      /* Tailwind emerald green */
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+    /* ✅ Bot white bubble */
+    .msg.bot {
+      background: #ffffff;
+      color: #2c3e50;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+      border: 1px solid #ddd;
+    }
 
     .chat-input { display: flex; border-top: 1px solid #ccc; background: #f0f0f0; }
     .chat-input input {
@@ -119,50 +105,11 @@
     </header>
 
     <div class="nav">
-      <div class="nav-item active" data-target="plan">My Action Plan</div>
-      <div class="nav-item" data-target="chat">Ask EarthMate</div>
-    </div>
-
-    <!-- Action Plan -->
-    <div class="content active" id="plan">
-      <div class="welcome-section">
-        <h2>Generate Your Action Plan 🌍</h2>
-        <p>Tell us about your lifestyle and we’ll create a personalized eco-friendly action plan just for you.</p>
-      </div>
-
-      <form class="form-section" id="planForm">
-        <div>
-          <label>How do you usually travel?</label>
-          <select name="transport">
-            <option value="car">Mostly Car</option>
-            <option value="bike">Bike</option>
-            <option value="bus">Bus/Metro</option>
-            <option value="walk">Walking</option>
-          </select>
-        </div>
-        <div>
-          <label>Electricity usage per month (kWh approx):</label>
-          <input type="number" name="electricity" placeholder="e.g. 300" />
-        </div>
-        <div>
-          <label>Your diet preference:</label>
-          <select name="diet">
-            <option value="meat">Mostly Meat</option>
-            <option value="mixed">Mixed</option>
-            <option value="plant">Plant-based</option>
-          </select>
-        </div>
-        <div>
-          <label>Plastic usage (per week items):</label>
-          <input type="number" name="plastic" placeholder="e.g. 10" />
-        </div>
-        <button type="submit">Generate Plan</button>
-      </form>
-      <div id="planResult"></div>
+      <div class="nav-item active" data-target="chat">Ask EarthMate</div>
     </div>
 
     <!-- Chat -->
-    <div class="content" id="chat">
+    <div class="content active" id="chat">
       <div class="chat-box">
         <div class="messages" id="messages"></div>
         <div class="chat-input">
@@ -176,48 +123,6 @@
   </div>
 
   <script>
-    // Navigation
-    document.querySelectorAll(".nav-item").forEach((item) => {
-      item.addEventListener("click", function () {
-        document.querySelectorAll(".nav-item").forEach((el) => el.classList.remove("active"));
-        this.classList.add("active");
-        document.querySelectorAll(".content").forEach((el) => el.classList.remove("active"));
-        document.getElementById(this.dataset.target).classList.add("active");
-      });
-    });
-
-    // Action Plan
-    document.getElementById("planForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const transport = this.transport.value;
-      const electricity = parseInt(this.electricity.value) || 0;
-      const diet = this.diet.value;
-      const plastic = parseInt(this.plastic.value) || 0;
-      let plan = [], footprint = 0;
-
-      if (transport === "car") { plan.push("🚗 Carpool or use public transport twice a week → save ~0.7 tons CO₂"); footprint += 2.5; }
-      else if (transport === "bike" || transport === "walk") { plan.push("🚴 Great job! Biking/Walking keeps your footprint very low."); footprint += 0.5; }
-      else { plan.push("🚌 Using bus/metro is efficient, keep it up!"); footprint += 1.0; }
-
-      if (electricity > 400) { plan.push("💡 Switch to LED bulbs & energy-efficient appliances → save 0.2 tons"); footprint += 1.5; }
-      else { plan.push("⚡ Your electricity use is moderate, still try solar options."); footprint += 0.8; }
-
-      if (diet === "meat") { plan.push("🥩 Reduce beef/meat by 50% → save 1.1 tons"); footprint += 2.0; }
-      else if (diet === "mixed") { plan.push("🥗 Add more plant-based meals to cut emissions."); footprint += 1.2; }
-      else { plan.push("🌱 Excellent! Plant-based diets are eco-friendly."); footprint += 0.6; }
-
-      if (plastic > 15) { plan.push("♻️ Reduce plastic use, carry reusable bottles/bags."); footprint += 1.0; }
-      else { plan.push("🌍 Good! Limited plastic usage helps reduce waste."); footprint += 0.5; }
-
-      document.getElementById("planResult").innerHTML = `
-        <div class="result-card">
-          <h3>Your Yearly Carbon Footprint: ${footprint.toFixed(1)} tons CO₂</h3>
-          <p><strong>Recommended Action Plan:</strong></p>
-          <ul>${plan.map((p) => `<li>${p}</li>`).join("")}</ul>
-        </div>`;
-    });
-
-    // Chat
     const messages = document.getElementById("messages");
     const chatInput = document.getElementById("chatInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -226,10 +131,6 @@
       const div = document.createElement("div");
       div.className = "msg " + type;
       div.innerText = content;
-      const time = document.createElement("time");
-      const now = new Date();
-      time.innerText = now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
-      div.appendChild(time);
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     }
@@ -242,13 +143,14 @@
       if (!text) return;
       addMessage(text, "user");
       chatInput.value = "";
-      fetch("http://127.0.0.1:5000/chat", {
-        method: "POST", headers: { "Content-Type": "application/json" },
+      fetch("/chat", {  // ✅ relative path
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
       })
-        .then((res) => res.json())
-        .then((data) => { addMessage(data.reply || "Error: No response", "bot"); })
-        .catch(() => addMessage("Error connecting to server", "bot"));
+      .then((res) => res.json())
+      .then((data) => { addMessage(data.reply || "Error: No response", "bot"); })
+      .catch(() => addMessage("Error connecting to server", "bot"));
     }
   </script>
 </body>
