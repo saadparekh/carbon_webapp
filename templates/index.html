@@ -9,7 +9,12 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
   />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
 
     body {
       background: linear-gradient(135deg, #f0f9eb 0%, #e6f4f1 100%);
@@ -32,7 +37,16 @@
       animation: fadeIn 0.8s ease-in-out;
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     header {
       background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
@@ -41,60 +55,224 @@
       text-align: center;
     }
 
-    header h1 { font-size: 2.5rem; margin-bottom: 5px; font-weight: 700; }
-    header p { font-size: 1.1rem; opacity: 0.9; }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
 
-    .nav { display: flex; border-bottom: 1px solid #e0e0e0; }
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .nav {
+      display: flex;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
     .nav-item {
-      flex: 1; text-align: center; padding: 18px;
-      font-weight: 600; color: #555; cursor: pointer; transition: all 0.3s ease;
+      flex: 1;
+      text-align: center;
+      padding: 18px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .nav-item.active { color: #27ae60; border-bottom: 3px solid #27ae60; background: #f9fdfb; }
-    .nav-item:hover { background-color: #f9f9f9; }
 
-    .content { padding: 30px; display: none; }
-    .content.active { display: block; animation: fadeIn 0.6s ease-in-out; }
+    .nav-item.active {
+      color: #27ae60;
+      border-bottom: 3px solid #27ae60;
+      background: #f9fdfb;
+    }
 
-    /* Chat Box */
+    .nav-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .content {
+      padding: 30px;
+      display: none;
+    }
+
+    .content.active {
+      display: block;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .welcome-section h2 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    .welcome-section p {
+      color: #7f8c8d;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Action Plan Form */
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-section label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .form-section select,
+    .form-section input {
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .form-section select:focus,
+    .form-section input:focus {
+      border-color: #27ae60;
+    }
+
+    .form-section button {
+      margin-top: 15px;
+      padding: 14px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .form-section button:hover {
+      background: #219653;
+    }
+
+    /* Result Card */
+    .result-card {
+      margin-top: 25px;
+      padding: 25px;
+      background: #f0f9eb;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      animation: slideUp 0.6s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-card h3 {
+      color: #27ae60;
+      margin-bottom: 10px;
+    }
+
+    .result-card ul {
+      margin-left: 20px;
+      margin-top: 10px;
+    }
+
+    .result-card ul li {
+      margin-bottom: 8px;
+      color: #2c3e50;
+    }
+
+    /* Chat Section */
     .chat-box {
-      display: flex; flex-direction: column; height: 450px; border-radius: 12px;
-      background: #ece5dd; overflow: hidden; border: 1px solid #ccc; position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      overflow: hidden;
+      border: 1px solid #eee;
     }
+
     .messages {
-      flex: 1; padding: 20px; overflow-y: auto;
-      background: #e5ddd5; display: flex; flex-direction: column; gap: 10px;
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
     }
+
     .msg {
-      padding: 10px 14px; border-radius: 20px; max-width: 70%;
-      font-size: 0.95rem; line-height: 1.4; position: relative;
+      margin-bottom: 15px;
+      padding: 12px 16px;
+      border-radius: 15px;
+      max-width: 80%;
+      line-height: 1.4;
     }
-    /* ✅ User green bubble */
+
     .msg.user {
-      background: #34D399;      /* Tailwind emerald green */
+      background: #27ae60;
       color: white;
       align-self: flex-end;
-      border-bottom-right-radius: 5px;
     }
-    /* ✅ Bot white bubble */
+
     .msg.bot {
-      background: #ffffff;
+      background: #ecfdf5;
+      border: 1px solid #d1fae5;
       color: #2c3e50;
       align-self: flex-start;
-      border-bottom-left-radius: 5px;
-      border: 1px solid #ddd;
     }
 
-    .chat-input { display: flex; border-top: 1px solid #ccc; background: #f0f0f0; }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #eee;
+    }
+
     .chat-input input {
-      flex: 1; padding: 14px; border: none; outline: none; font-size: 1rem; background: #fff;
+      flex: 1;
+      padding: 14px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
     }
-    .chat-input button {
-      background: #27ae60; color: white; border: none; padding: 0 25px;
-      font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.3s ease;
-    }
-    .chat-input button:hover { background: #219653; }
 
-    footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 0.9rem; border-top: 1px solid #eee; }
+    .chat-input button {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .chat-input button:hover {
+      background: #219653;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+    }
   </style>
 </head>
 <body>
@@ -105,24 +283,157 @@
     </header>
 
     <div class="nav">
-      <div class="nav-item active" data-target="chat">Ask EarthMate</div>
+      <div class="nav-item active" data-target="plan">My Action Plan</div>
+      <div class="nav-item" data-target="chat">Ask EcoBot</div>
     </div>
 
-    <!-- Chat -->
-    <div class="content active" id="chat">
+    <!-- Action Plan Section -->
+    <div class="content active" id="plan">
+      <div class="welcome-section">
+        <h2>Generate Your Action Plan 🌍</h2>
+        <p>
+          Tell us about your lifestyle and we’ll create a personalized
+          eco-friendly action plan just for you.
+        </p>
+      </div>
+
+      <form class="form-section" id="planForm">
+        <div>
+          <label>How do you usually travel?</label>
+          <select name="transport">
+            <option value="car">Mostly Car</option>
+            <option value="bike">Bike</option>
+            <option value="bus">Bus/Metro</option>
+            <option value="walk">Walking</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Electricity usage per month (kWh approx):</label>
+          <input type="number" name="electricity" placeholder="e.g. 300" />
+        </div>
+
+        <div>
+          <label>Your diet preference:</label>
+          <select name="diet">
+            <option value="meat">Mostly Meat</option>
+            <option value="mixed">Mixed</option>
+            <option value="plant">Plant-based</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Plastic usage (per week items):</label>
+          <input type="number" name="plastic" placeholder="e.g. 10" />
+        </div>
+
+        <button type="submit">Generate Plan</button>
+      </form>
+
+      <div id="planResult"></div>
+    </div>
+
+    <!-- Chatbot Section -->
+    <div class="content" id="chat">
       <div class="chat-box">
         <div class="messages" id="messages"></div>
         <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Ask about carbon footprint..." />
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Ask about carbon footprint..."
+          />
           <button id="sendBtn">Send</button>
         </div>
       </div>
     </div>
 
-    <footer><p>© 2025 EarthMate - Making the planet greener one step at a time</p></footer>
+    <footer>
+      <p>© 2025 EarthMate - Making the planet greener one step at a time </p>
+    </footer>
   </div>
 
   <script>
+    // Tab Switching
+    document.querySelectorAll(".nav-item").forEach((item) => {
+      item.addEventListener("click", function () {
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((el) => el.classList.remove("active"));
+        this.classList.add("active");
+
+        document
+          .querySelectorAll(".content")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById(this.dataset.target).classList.add("active");
+      });
+    });
+
+    // Action Plan Form Handler
+    document.getElementById("planForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const transport = this.transport.value;
+      const electricity = parseInt(this.electricity.value) || 0;
+      const diet = this.diet.value;
+      const plastic = parseInt(this.plastic.value) || 0;
+
+      let plan = [];
+      let footprint = 0;
+
+      // Transport
+      if (transport === "car") {
+        plan.push("🚗 Carpool or use public transport twice a week → save ~0.7 tons CO₂");
+        footprint += 2.5;
+      } else if (transport === "bike" || transport === "walk") {
+        plan.push("🚴 Great job! Biking/Walking keeps your footprint very low.");
+        footprint += 0.5;
+      } else {
+        plan.push("🚌 Using bus/metro is efficient, keep it up!");
+        footprint += 1.0;
+      }
+
+      // Electricity
+      if (electricity > 400) {
+        plan.push("💡 Switch to LED bulbs & energy-efficient appliances → save 0.2 tons");
+        footprint += 1.5;
+      } else {
+        plan.push("⚡ Your electricity use is moderate, still try solar options.");
+        footprint += 0.8;
+      }
+
+      // Diet
+      if (diet === "meat") {
+        plan.push("🥩 Reduce beef/meat by 50% → save 1.1 tons");
+        footprint += 2.0;
+      } else if (diet === "mixed") {
+        plan.push("🥗 Add more plant-based meals to cut emissions.");
+        footprint += 1.2;
+      } else {
+        plan.push("🌱 Excellent! Plant-based diets are eco-friendly.");
+        footprint += 0.6;
+      }
+
+      // Plastic
+      if (plastic > 15) {
+        plan.push("♻️ Reduce plastic use, carry reusable bottles/bags.");
+        footprint += 1.0;
+      } else {
+        plan.push("🌍 Good! Limited plastic usage helps reduce waste.");
+        footprint += 0.5;
+      }
+
+      // Show Result
+      const resultHTML = `
+        <div class="result-card">
+          <h3>Your Yearly Carbon Footprint: ${footprint.toFixed(1)} tons CO₂</h3>
+          <p><strong>Recommended Action Plan:</strong></p>
+          <ul>${plan.map((p) => `<li>${p}</li>`).join("")}</ul>
+        </div>
+      `;
+      document.getElementById("planResult").innerHTML = resultHTML;
+    });
+
+    // Chatbot
     const messages = document.getElementById("messages");
     const chatInput = document.getElementById("chatInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -136,21 +447,26 @@
     }
 
     sendBtn.addEventListener("click", sendMessage);
-    chatInput.addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
+    chatInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") sendMessage();
+    });
 
     function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
       addMessage(text, "user");
       chatInput.value = "";
-      fetch("/chat", {  // ✅ relative path
+
+      fetch("http://127.0.0.1:5000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
       })
-      .then((res) => res.json())
-      .then((data) => { addMessage(data.reply || "Error: No response", "bot"); })
-      .catch(() => addMessage("Error connecting to server", "bot"));
+        .then((res) => res.json())
+        .then((data) => {
+          addMessage(data.reply || "Error: No response", "bot");
+        })
+        .catch(() => addMessage("Error connecting to server", "bot"));
     }
   </script>
 </body>

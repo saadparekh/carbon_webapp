@@ -1,5 +1,5 @@
-python-dotenv
+Flask
+Flask-Cors
 requests
-flask
-flask-cors
+python-dotenv
 gunicorn
