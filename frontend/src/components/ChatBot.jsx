@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
+const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL || "https://carbon-webapp-s97l.onrender.com";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState(() => {
@@ -8,6 +9,7 @@ export default function ChatBot() {
     return saved ? JSON.parse(saved) : [];
   });
   const [input, setInput] = useState("");
+  const [sending, setSending] = useState(false); // ✅ Track sending state
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -16,9 +18,11 @@ export default function ChatBot() {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || sending) return;
 
-    setMessages((prev) => [...prev, { type: "user", text: input }]);
+    setSending(true); // Disable sending until response
+    const userMessage = { type: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setMessages((prev) => [
       ...prev,
@@ -49,6 +53,8 @@ export default function ChatBot() {
         ...prev,
         { type: "bot", text: "⚠️ Error connecting to server" },
       ]);
+    } finally {
+      setSending(false); // Re-enable sending
     }
   };
 
@@ -60,12 +66,12 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="flex flex-col max-w-xl mx-auto gap-3">
-      <div className="chat-box flex flex-col h-96 border rounded p-3 overflow-y-auto bg-gray-50">
+    <div className="flex flex-col max-w-xl mx-auto gap-3 h-full">
+      <div className="chat-box flex flex-col flex-1 border rounded p-3 overflow-y-auto bg-gray-50 max-h-[80vh]">
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`p-3 rounded-lg max-w-3/4 whitespace-pre-line ${
+            className={`p-3 rounded-lg max-w-3/4 whitespace-pre-line break-words ${
               msg.type === "user"
                 ? "bg-green-600 text-white self-end"
                 : msg.type === "bot"
@@ -85,13 +91,19 @@ export default function ChatBot() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about carbon footprint..."
-          className="flex-1 p-3 border rounded resize-none h-12"
+          className="flex-1 p-3 border rounded resize-none h-12 focus:outline-green-500"
+          disabled={sending} // ✅ Disable typing while sending
         />
         <button
           onClick={sendMessage}
-          className="bg-green-600 text-white px-4 rounded hover:bg-green-700"
+          disabled={sending} // ✅ Disable button while sending
+          className={`px-4 rounded text-white ${
+            sending
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
+          }`}
         >
-          Send
+          {sending ? "Sending..." : "Send"}
         </button>
       </div>
     </div>
