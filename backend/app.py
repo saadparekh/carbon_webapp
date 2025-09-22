@@ -4,14 +4,22 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env (used only for local dev)
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
 
+# ✅ Allow only your Vercel frontend for CORS
+CORS(app, origins=["https://carbon-webapp.vercel.app"])
+
+# API Key from environment variables (set in Render dashboard)
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+# ----------------- Health check -----------------
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
 
 
 # ----------------- Chatbot -----------------
@@ -20,11 +28,10 @@ def chat():
     data = request.json
     user_input = data.get("message", "")
 
-    # Default mode = short
     max_tokens = 80
     instruction = "Answer briefly in 3-4 sentences."
 
-    # Agar user 'long', 'detail', 'explain more' likhe to detailed mode
+    # Detailed mode if user asks for it
     if any(word in user_input.lower() for word in ["long", "detail", "explain more", "write more"]):
         max_tokens = 500
         instruction = "Give a detailed explanation."
@@ -32,12 +39,11 @@ def chat():
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5000",  # Optional
-        "X-Title": "Eco Chatbot"  # Optional
+        "X-Title": "Eco Chatbot"
     }
 
     payload = {
-        "model": "x-ai/grok-4-fast:free",  # ✅ Free model use
+        "model": "x-ai/grok-4-fast:free",
         "messages": [
             {"role": "system", "content": instruction},
             {"role": "user", "content": user_input}
@@ -49,7 +55,6 @@ def chat():
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
 
-        # ✅ Hamesha ek reply return hoga
         if "choices" in result and result["choices"]:
             reply = result["choices"][0]["message"]["content"]
             return jsonify({"reply": reply})
@@ -68,15 +73,13 @@ def action_plan():
     diet = data.get("diet", "mixed")
     plastic = float(data.get("plastic", 0))
 
-    # --- Very simple emission factors (dummy calculation) ---
-    travel_emission = travel * 0.0002 * 52  # per year
+    travel_emission = travel * 0.0002 * 52
     electricity_emission = electricity * 0.0007 * 12
     diet_emission = 2.5 if diet == "meat" else (1.5 if diet == "mixed" else 1.0)
     plastic_emission = plastic * 0.001 * 52
 
     total = travel_emission + electricity_emission + diet_emission + plastic_emission
 
-    # --- Recommendations ---
     recommendations = []
     if travel_emission > 1:
         recommendations.append("🚴 Use public transport or bike at least 2 days a week → save ~0.7 tons CO₂")
@@ -97,4 +100,5 @@ def action_plan():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # For Render, remove debug=True in production
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
