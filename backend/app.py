@@ -3,12 +3,12 @@ from flask_cors import CORS
 import os
 import requests
 
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app)
 
-# Environment variable se API key lena (Render Dashboard → Environment Variables)
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
+
 
 # ----------------- Chatbot -----------------
 @app.route("/chat", methods=["POST"])
@@ -42,7 +42,6 @@ def chat():
     try:
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
-        print("🔎 OpenRouter API Response:", result)  # Debugging logs (Render dashboard → Logs)
 
         if "choices" in result:
             reply = result["choices"][0]["message"]["content"]
@@ -62,7 +61,7 @@ def action_plan():
     diet = data.get("diet", "mixed")
     plastic = float(data.get("plastic", 0))
 
-    # --- Simple emission factors (example only) ---
+    # --- Very simple emission factors (dummy calculation) ---
     travel_emission = travel * 0.0002 * 52  # per year
     electricity_emission = electricity * 0.0007 * 12
     diet_emission = 2.5 if diet == "meat" else (1.5 if diet == "mixed" else 1.0)
@@ -90,12 +89,5 @@ def action_plan():
     })
 
 
-# ----------------- Health Check -----------------
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({"status": "Backend running ✅"})
-
-
-if __name__ == "__main__":
-    # Render pe `debug=True` off rakhna zaroori hai warna random errors aayenge
-    app.run(host="0.0.0.0", port=5000)
+if _name_ == "_main_":
+    app.run(debug=True)
