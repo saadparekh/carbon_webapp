@@ -45,13 +45,14 @@ def chat():
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
 
-        if "choices" in result:
+        # ✅ Hamesha ek reply return hoga
+        if "choices" in result and result["choices"]:
             reply = result["choices"][0]["message"]["content"]
             return jsonify({"reply": reply})
         else:
-            return jsonify({"error": "API response invalid", "details": result}), 500
+            return jsonify({"reply": "⚠️ API did not return a valid response."})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"reply": f"⚠️ Error: {str(e)}"})
 
 
 # ----------------- Action Plan -----------------
