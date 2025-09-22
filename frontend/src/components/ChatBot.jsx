@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Use env variable
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
 
 export default function ChatBot() {
   const [messages, setMessages] = useState(() => {
@@ -22,7 +22,7 @@ export default function ChatBot() {
     setMessages(prev => [...prev, { type: "typing", text: "EarthMate is typing..." }]);
 
     try {
-      const res = await fetch(`${BACKEND_URL}/chat`, {   // <-- backend URL
+      const res = await fetch(`${BACKEND_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input })
