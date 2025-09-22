@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-// Directly use your deployed backend URL
-const BACKEND_URL = "https://carbon-webapp-s97l.onrender.com";
+const BACKEND_URL = "https://carbon-webapp-s97l.onrender.com"; // Backend URL
 
 export default function ChatBot() {
   const [messages, setMessages] = useState(() => {
@@ -44,16 +43,7 @@ export default function ChatBot() {
     <div className="flex flex-col max-w-xl mx-auto gap-3">
       <div className="chat-box flex flex-col h-96 border rounded p-3 overflow-y-auto bg-gray-50">
         {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`p-3 rounded-lg max-w-3/4 ${
-              msg.type === "user"
-                ? "bg-green-600 text-white self-end"
-                : msg.type === "bot"
-                ? "bg-white text-gray-800 self-start border"
-                : "italic text-gray-500"
-            }`}
-          >
+          <div key={i} className={`p-3 rounded-lg max-w-3/4 ${msg.type === "user" ? "bg-green-600 text-white self-end" : msg.type === "bot" ? "bg-white text-gray-800 self-start border" : "italic text-gray-500"}`}>
             {msg.text}
           </div>
         ))}
@@ -61,19 +51,8 @@ export default function ChatBot() {
       </div>
 
       <div className="flex gap-2 mt-2">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && sendMessage()}
-          placeholder="Ask about carbon footprint..."
-          className="flex-1 p-3 border rounded"
-        />
-        <button
-          onClick={sendMessage}
-          className="bg-green-600 text-white px-4 rounded hover:bg-green-700"
-        >
-          Send
-        </button>
+        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} placeholder="Ask about carbon footprint..." className="flex-1 p-3 border rounded" />
+        <button onClick={sendMessage} className="bg-green-600 text-white px-4 rounded hover:bg-green-700">Send</button>
       </div>
     </div>
   );
