@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
+// Directly use your deployed backend URL
+const BACKEND_URL = "https://carbon-webapp-s97l.onrender.com";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState(() => {
@@ -17,6 +18,7 @@ export default function ChatBot() {
 
   const sendMessage = async () => {
     if (!input) return;
+
     setMessages(prev => [...prev, { type: "user", text: input }]);
     setInput("");
     setMessages(prev => [...prev, { type: "typing", text: "EarthMate is typing..." }]);
@@ -27,7 +29,9 @@ export default function ChatBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input })
       });
+
       const data = await res.json();
+
       setMessages(prev => prev.filter(m => m.type !== "typing"));
       setMessages(prev => [...prev, { type: "bot", text: data.reply || "No response" }]);
     } catch (err) {
