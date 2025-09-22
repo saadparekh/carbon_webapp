@@ -27,11 +27,13 @@ def chat():
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost:5000",  # Optional
+        "X-Title": "Eco Chatbot"  # Optional
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",
+        "model": "x-ai/grok-4-fast:free",  # ✅ Free model use
         "messages": [
             {"role": "system", "content": instruction},
             {"role": "user", "content": user_input}
@@ -91,5 +93,3 @@ def action_plan():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
