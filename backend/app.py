@@ -3,9 +3,10 @@ from flask_cors import CORS
 import os
 import requests
 
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app)
 
+# 🔑 API key Render ke Environment Variables me set karo
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -20,7 +21,7 @@ def chat():
     max_tokens = 80
     instruction = "Answer briefly in 3-4 sentences."
 
-    # Agar user 'long', 'detail', 'explain more' likhe to detailed mode
+    # Agar user ne 'long', 'detail', 'explain more', 'write more' bola
     if any(word in user_input.lower() for word in ["long", "detail", "explain more", "write more"]):
         max_tokens = 500
         instruction = "Give a detailed explanation."
@@ -31,7 +32,7 @@ def chat():
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",
+        "model": "openai/gpt-3.5-turbo",   # ✅ sahi model use karo
         "messages": [
             {"role": "system", "content": instruction},
             {"role": "user", "content": user_input}
@@ -42,6 +43,9 @@ def chat():
     try:
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
+
+        # Debug ke liye (Render logs me check karo)
+        print("🔎 OpenRouter API Response:", result)
 
         if "choices" in result:
             reply = result["choices"][0]["message"]["content"]
@@ -61,7 +65,7 @@ def action_plan():
     diet = data.get("diet", "mixed")
     plastic = float(data.get("plastic", 0))
 
-    # --- Very simple emission factors (dummy calculation) ---
+    # --- Simple emission factors (example only) ---
     travel_emission = travel * 0.0002 * 52  # per year
     electricity_emission = electricity * 0.0007 * 12
     diet_emission = 2.5 if diet == "meat" else (1.5 if diet == "mixed" else 1.0)
@@ -89,5 +93,12 @@ def action_plan():
     })
 
 
-if _name_ == "_main_":
-    app.run(debug=True)
+# ----------------- Health Check -----------------
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "Backend running ✅"})
+
+
+if __name__ == "__main__":
+    # Render pe debug=False rakhna
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
