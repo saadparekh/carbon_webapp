@@ -1,31 +1,26 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
 import os
 import requests
 
-load_dotenv()
-app = Flask(__name__, template_folder="templates", static_folder="static")
+app = Flask(__name__)
 CORS(app)
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
-# ---------- Frontend ----------
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-# ---------- Chatbot ----------
+# ----------------- Chatbot -----------------
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.json
     user_input = data.get("message", "")
 
+    # Default mode = short
     max_tokens = 80
     instruction = "Answer briefly in 3-4 sentences."
+
+    # Agar user 'long', 'detail', 'explain more' likhe to detailed mode
     if any(word in user_input.lower() for word in ["long", "detail", "explain more", "write more"]):
         max_tokens = 500
         instruction = "Give a detailed explanation."
@@ -57,7 +52,7 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 
-# ---------- Action Plan ----------
+# ----------------- Action Plan -----------------
 @app.route("/action_plan", methods=["POST"])
 def action_plan():
     data = request.json
@@ -66,13 +61,15 @@ def action_plan():
     diet = data.get("diet", "mixed")
     plastic = float(data.get("plastic", 0))
 
-    travel_emission = travel * 0.0002 * 52
+    # --- Very simple emission factors (dummy calculation) ---
+    travel_emission = travel * 0.0002 * 52  # per year
     electricity_emission = electricity * 0.0007 * 12
     diet_emission = 2.5 if diet == "meat" else (1.5 if diet == "mixed" else 1.0)
     plastic_emission = plastic * 0.001 * 52
 
     total = travel_emission + electricity_emission + diet_emission + plastic_emission
 
+    # --- Recommendations ---
     recommendations = []
     if travel_emission > 1:
         recommendations.append("🚴 Use public transport or bike at least 2 days a week → save ~0.7 tons CO₂")
@@ -94,3 +91,5 @@ def action_plan():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
