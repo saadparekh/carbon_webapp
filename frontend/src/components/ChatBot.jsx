@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const BACKEND_URL = "https://carbon-webapp-s97l.onrender.com"; // Backend URL
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Backend URL
 
 export default function ChatBot() {
   const [messages, setMessages] = useState(() => {
