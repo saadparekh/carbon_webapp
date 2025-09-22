@@ -10,13 +10,17 @@ load_dotenv()
 app = Flask(__name__)
 
 # ✅ Allow only your Vercel frontend for CORS
-CORS(app, origins=["https://carbon-webapp.vercel.app"])
+CORS(app, origins=["https://carbon-webapp.vercel.app", "https://carbon-webapp-1.vercel.app"])
 
 # API Key from environment variables (set in Render dashboard)
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 BASE_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # ----------------- Health check -----------------
+@app.route("/")
+def index():
+    return jsonify({"status": "ok"})
+
 @app.route("/health")
 def health():
     return jsonify({"status": "ok"})
