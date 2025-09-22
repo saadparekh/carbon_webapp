@@ -58,6 +58,7 @@ def chat():
     try:
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
+        print("OpenRouter API Response:", result)  # <-- Added for debugging
 
         if "choices" in result and result["choices"]:
             reply = result["choices"][0]["message"]["content"]
