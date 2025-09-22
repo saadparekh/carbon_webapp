@@ -18,22 +18,32 @@ export default function ChatBot() {
 
   const sendMessage = async () => {
     if (!input) return;
-    setMessages(prev => [...prev, { type: "user", text: input }]);
+    setMessages((prev) => [...prev, { type: "user", text: input }]);
     setInput("");
-    setMessages(prev => [...prev, { type: "typing", text: "EarthMate is typing..." }]);
+    setMessages((prev) => [
+      ...prev,
+      { type: "typing", text: "EarthMate is typing..." },
+    ]);
 
     try {
-      const res = await fetch("/chat", {
+      const res = await fetch("https://carbon-webapp-s97l.onrender.com/chat", {
+        // <-- backend URL
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input })
+        body: JSON.stringify({ message: input }),
       });
       const data = await res.json();
-      setMessages(prev => prev.filter(m => m.type !== "typing"));
-      setMessages(prev => [...prev, { type: "bot", text: data.reply || "No response" }]);
+      setMessages((prev) => prev.filter((m) => m.type !== "typing"));
+      setMessages((prev) => [
+        ...prev,
+        { type: "bot", text: data.reply || "No response" },
+      ]);
     } catch (err) {
-      setMessages(prev => prev.filter(m => m.type !== "typing"));
-      setMessages(prev => [...prev, { type: "bot", text: "Error connecting to server" }]);
+      setMessages((prev) => prev.filter((m) => m.type !== "typing"));
+      setMessages((prev) => [
+        ...prev,
+        { type: "bot", text: "Error connecting to server" },
+      ]);
     }
   };
 
@@ -61,8 +71,8 @@ export default function ChatBot() {
       <div className="flex gap-2 mt-2">
         <input
           value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && sendMessage()}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Ask about carbon footprint..."
           className="flex-1 p-3 border rounded"
         />

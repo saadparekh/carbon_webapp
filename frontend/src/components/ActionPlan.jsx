@@ -6,27 +6,37 @@ export default function ActionPlan() {
     transport: "car",
     electricity: "",
     diet: "meat",
-    plastic: ""
+    plastic: "",
   });
   const [result, setResult] = useState(null);
 
-  const handleChange = e => setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      travel: formData.transport === "car" ? 200 : formData.transport === "bus" ? 100 : 20,
+      travel:
+        formData.transport === "car"
+          ? 200
+          : formData.transport === "bus"
+          ? 100
+          : 20,
       electricity: parseInt(formData.electricity) || 0,
       diet: formData.diet,
-      plastic: parseInt(formData.plastic) || 0
+      plastic: parseInt(formData.plastic) || 0,
     };
 
     try {
-      const res = await fetch("/action_plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
+      const res = await fetch(
+        "https://carbon-webapp-s97l.onrender.com/action_plan",
+        {
+          // <-- backend URL
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = await res.json();
       setResult(data);
     } catch (err) {
@@ -38,15 +48,23 @@ export default function ActionPlan() {
   return (
     <div className="p-4">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-green-700 mb-2">🌍 Your Personalized Action Plan</h2>
+        <h2 className="text-3xl font-bold text-green-700 mb-2">
+          🌍 Your Personalized Action Plan
+        </h2>
         <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-          Fill in your lifestyle details and get eco-friendly recommendations to reduce your carbon footprint.
+          Fill in your lifestyle details and get eco-friendly recommendations to
+          reduce your carbon footprint.
         </p>
       </div>
 
-      <form className="flex flex-col gap-4 max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-4 max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md"
+        onSubmit={handleSubmit}
+      >
         <div>
-          <label className="font-semibold text-gray-700">How do you usually travel?</label>
+          <label className="font-semibold text-gray-700">
+            How do you usually travel?
+          </label>
           <select
             name="transport"
             value={formData.transport}
@@ -61,7 +79,9 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">Electricity usage per month (kWh approx):</label>
+          <label className="font-semibold text-gray-700">
+            Electricity usage per month (kWh approx):
+          </label>
           <input
             type="number"
             name="electricity"
@@ -73,7 +93,9 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">Your diet preference:</label>
+          <label className="font-semibold text-gray-700">
+            Your diet preference:
+          </label>
           <select
             name="diet"
             value={formData.diet}
@@ -87,7 +109,9 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">Plastic usage (per week items):</label>
+          <label className="font-semibold text-gray-700">
+            Plastic usage (per week items):
+          </label>
           <input
             type="number"
             name="plastic"
@@ -131,7 +155,9 @@ export default function ActionPlan() {
         </div>
       )}
 
-      {result && result.error && <p className="text-red-500 mt-4">{result.error}</p>}
+      {result && result.error && (
+        <p className="text-red-500 mt-4">{result.error}</p>
+      )}
     </div>
   );
 }
