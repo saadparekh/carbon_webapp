@@ -44,7 +44,6 @@ def chat():
         response = requests.post(BASE_URL, headers=headers, json=payload)
         result = response.json()
 
-        # Debug ke liye (Render logs me check karo)
         print("🔎 OpenRouter API Response:", result)
 
         if "choices" in result:
@@ -65,7 +64,7 @@ def action_plan():
     diet = data.get("diet", "mixed")
     plastic = float(data.get("plastic", 0))
 
-    # --- Simple emission factors (example only) ---
+    # --- Simple emission factors ---
     travel_emission = travel * 0.0002 * 52  # per year
     electricity_emission = electricity * 0.0007 * 12
     diet_emission = 2.5 if diet == "meat" else (1.5 if diet == "mixed" else 1.0)
@@ -96,13 +95,20 @@ def action_plan():
     payload = {
         "model": "openai/gpt-3.5-turbo",
         "messages": [
-            {"role": "system", "content": "You are an eco-expert. Give practical and concise eco-friendly advice."},
-            {"role": "user", "content": f"My yearly carbon footprint is {total:.1f} tons CO₂. "
-                                        f"My travel habits = {travel} km/week, electricity = {electricity} kWh/month, "
-                                        f"diet = {diet}, plastic use = {plastic} items/week. "
-                                        "Suggest 3-4 personalized tips to reduce my footprint."}
+            {
+                "role": "system",
+                "content": "You are an eco-expert. Give 3-4 practical and concise tips. "
+                           "Each tip should be around 2 sentences, not too short, not too long."
+            },
+            {
+                "role": "user",
+                "content": f"My yearly carbon footprint is {total:.1f} tons CO₂. "
+                           f"My travel = {travel} km/week, electricity = {electricity} kWh/month, "
+                           f"diet = {diet}, plastic use = {plastic} items/week. "
+                           "Suggest personalized eco-friendly lifestyle improvements."
+            }
         ],
-        "max_tokens": 150
+        "max_tokens": 200
     }
 
     ai_tips = "⚠️ AI tips could not be generated."
@@ -128,5 +134,4 @@ def home():
 
 
 if __name__ == "__main__":
-    # Render pe debug=False rakhna
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

@@ -18,7 +18,14 @@ export default function ActionPlan() {
   const handleSubmit = async e => {
     e.preventDefault();
     const payload = {
-      travel: formData.transport === "car" ? 200 : formData.transport === "bus" ? 100 : formData.transport === "bike" ? 50 : 20,
+      travel:
+        formData.transport === "car"
+          ? 200
+          : formData.transport === "bus"
+          ? 100
+          : formData.transport === "bike"
+          ? 50
+          : 20,
       electricity: parseInt(formData.electricity) || 0,
       diet: formData.diet,
       plastic: parseInt(formData.plastic) || 0
@@ -41,9 +48,12 @@ export default function ActionPlan() {
   return (
     <div className="p-4">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-green-700 mb-2">🌍 Your Personalized Action Plan</h2>
+        <h2 className="text-3xl font-bold text-green-700 mb-2">
+          🌍 Your Personalized Action Plan
+        </h2>
         <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-          Fill in your lifestyle details and get eco-friendly recommendations to reduce your carbon footprint.
+          Fill in your lifestyle details and get eco-friendly recommendations to
+          reduce your carbon footprint.
         </p>
       </div>
 
@@ -52,7 +62,9 @@ export default function ActionPlan() {
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="font-semibold text-gray-700">How do you usually travel?</label>
+          <label className="font-semibold text-gray-700">
+            How do you usually travel?
+          </label>
           <select
             name="transport"
             value={formData.transport}
@@ -67,7 +79,9 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">Electricity usage per month (kWh approx):</label>
+          <label className="font-semibold text-gray-700">
+            Electricity usage per month (kWh approx):
+          </label>
           <input
             type="number"
             name="electricity"
@@ -93,7 +107,9 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">Plastic usage (per week items):</label>
+          <label className="font-semibold text-gray-700">
+            Plastic usage (per week items):
+          </label>
           <input
             type="number"
             name="plastic"
@@ -117,7 +133,9 @@ export default function ActionPlan() {
           <h3 className="text-green-700 font-bold text-xl mb-4">
             Your Yearly Carbon Footprint: {result.footprint.toFixed(1)} tons CO₂
           </h3>
-          <ul className="list-disc pl-5 text-gray-700">
+
+          {/* Recommendations */}
+          <ul className="list-disc pl-5 text-gray-700 mb-6">
             <AnimatePresence>
               {result.recommendations.map((r, i) => (
                 <motion.li
@@ -134,15 +152,19 @@ export default function ActionPlan() {
             </AnimatePresence>
           </ul>
 
-          {/* AI personalized tips */}
-          <div className="mt-6 p-4 bg-white border-l-4 border-green-600 rounded">
-            <h4 className="font-semibold text-green-700 mb-2">🤖 AI Personalized Tips:</h4>
+          {/* AI Tips */}
+          <div className="p-4 bg-white border-l-4 border-green-600 rounded">
+            <h4 className="font-semibold text-green-700 mb-2">
+              🤖 AI Personalized Tips:
+            </h4>
             <p className="text-gray-700 whitespace-pre-line">{result.ai_tips}</p>
           </div>
         </div>
       )}
 
-      {result && result.error && <p className="text-red-500 mt-4">{result.error}</p>}
+      {result && result.error && (
+        <p className="text-red-500 mt-4">{result.error}</p>
+      )}
     </div>
   );
 }
