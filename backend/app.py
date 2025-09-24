@@ -32,7 +32,7 @@ def chat():
     }
 
     payload = {
-        "model": "openai/gpt-3.5-turbo",   # ✅ sahi model use karo
+        "model": "openai/gpt-3.5-turbo",
         "messages": [
             {"role": "system", "content": instruction},
             {"role": "user", "content": user_input}
@@ -73,7 +73,7 @@ def action_plan():
 
     total = travel_emission + electricity_emission + diet_emission + plastic_emission
 
-    # --- Recommendations ---
+    # --- Static Recommendations ---
     recommendations = []
     if travel_emission > 1:
         recommendations.append("🚴 Use public transport or bike at least 2 days a week → save ~0.7 tons CO₂")
@@ -87,9 +87,37 @@ def action_plan():
     if not recommendations:
         recommendations.append("✅ Your habits are already eco-friendly. Keep it up!")
 
+    # --- AI Personalized Tips ---
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": "openai/gpt-3.5-turbo",
+        "messages": [
+            {"role": "system", "content": "You are an eco-expert. Give practical and concise eco-friendly advice."},
+            {"role": "user", "content": f"My yearly carbon footprint is {total:.1f} tons CO₂. "
+                                        f"My travel habits = {travel} km/week, electricity = {electricity} kWh/month, "
+                                        f"diet = {diet}, plastic use = {plastic} items/week. "
+                                        "Suggest 3-4 personalized tips to reduce my footprint."}
+        ],
+        "max_tokens": 150
+    }
+
+    ai_tips = "⚠️ AI tips could not be generated."
+    try:
+        response = requests.post(BASE_URL, headers=headers, json=payload)
+        result = response.json()
+        if "choices" in result:
+            ai_tips = result["choices"][0]["message"]["content"]
+    except Exception as e:
+        ai_tips = f"Error: {str(e)}"
+
     return jsonify({
         "footprint": total,
-        "recommendations": recommendations
+        "recommendations": recommendations,
+        "ai_tips": ai_tips
     })
 
 

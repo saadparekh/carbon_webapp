@@ -18,7 +18,7 @@ export default function ActionPlan() {
   const handleSubmit = async e => {
     e.preventDefault();
     const payload = {
-      travel: formData.transport === "car" ? 200 : formData.transport === "bus" ? 100 : 20,
+      travel: formData.transport === "car" ? 200 : formData.transport === "bus" ? 100 : formData.transport === "bike" ? 50 : 20,
       electricity: parseInt(formData.electricity) || 0,
       diet: formData.diet,
       plastic: parseInt(formData.plastic) || 0
@@ -47,7 +47,10 @@ export default function ActionPlan() {
         </p>
       </div>
 
-      <form className="flex flex-col gap-4 max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-4 max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md"
+        onSubmit={handleSubmit}
+      >
         <div>
           <label className="font-semibold text-gray-700">How do you usually travel?</label>
           <select
@@ -130,6 +133,12 @@ export default function ActionPlan() {
               ))}
             </AnimatePresence>
           </ul>
+
+          {/* AI personalized tips */}
+          <div className="mt-6 p-4 bg-white border-l-4 border-green-600 rounded">
+            <h4 className="font-semibold text-green-700 mb-2">🤖 AI Personalized Tips:</h4>
+            <p className="text-gray-700 whitespace-pre-line">{result.ai_tips}</p>
+          </div>
         </div>
       )}
 
