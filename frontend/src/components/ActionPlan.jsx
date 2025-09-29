@@ -11,25 +11,14 @@ export default function ActionPlan() {
     plastic: ""
   });
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false); // ✅ loading state
 
   const handleChange = e =>
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setLoading(true); // ✅ request start hote hi loading true
-    setResult(null);
-
     const payload = {
-      travel:
-        formData.transport === "car"
-          ? 200
-          : formData.transport === "bus"
-          ? 100
-          : formData.transport === "bike"
-          ? 50
-          : 20,
+      travel: formData.transport === "car" ? 200 : formData.transport === "bus" ? 100 : formData.transport === "bike" ? 50 : 20,
       electricity: parseInt(formData.electricity) || 0,
       diet: formData.diet,
       plastic: parseInt(formData.plastic) || 0
@@ -46,20 +35,15 @@ export default function ActionPlan() {
     } catch (err) {
       console.error(err);
       setResult({ error: "Error fetching plan" });
-    } finally {
-      setLoading(false); // ✅ request khatam hone par loading false
     }
   };
 
   return (
     <div className="p-4">
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-green-700 mb-2">
-          🌍 Your Personalized Action Plan
-        </h2>
+        <h2 className="text-3xl font-bold text-green-700 mb-2">🌍 Your Personalized Action Plan</h2>
         <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-          Fill in your lifestyle details and get eco-friendly recommendations to
-          reduce your carbon footprint.
+          Fill in your lifestyle details and get eco-friendly recommendations to reduce your carbon footprint.
         </p>
       </div>
 
@@ -68,9 +52,7 @@ export default function ActionPlan() {
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="font-semibold text-gray-700">
-            How do you usually travel?
-          </label>
+          <label className="font-semibold text-gray-700">How do you usually travel?</label>
           <select
             name="transport"
             value={formData.transport}
@@ -85,9 +67,7 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">
-            Electricity usage per month (kWh approx):
-          </label>
+          <label className="font-semibold text-gray-700">Electricity usage per month (kWh approx):</label>
           <input
             type="number"
             name="electricity"
@@ -99,9 +79,7 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">
-            Your diet preference:
-          </label>
+          <label className="font-semibold text-gray-700">Your diet preference:</label>
           <select
             name="diet"
             value={formData.diet}
@@ -115,9 +93,7 @@ export default function ActionPlan() {
         </div>
 
         <div>
-          <label className="font-semibold text-gray-700">
-            Plastic usage (per week items):
-          </label>
+          <label className="font-semibold text-gray-700">Plastic usage (per week items):</label>
           <input
             type="number"
             name="plastic"
@@ -136,14 +112,7 @@ export default function ActionPlan() {
         </button>
       </form>
 
-      {/* ✅ Loading message */}
-      {loading && (
-        <p className="text-center text-green-600 font-semibold mt-6">
-          ⏳ Generating your personalized action plan...
-        </p>
-      )}
-
-      {result && !result.error && !loading && (
+      {result && !result.error && (
         <div className="mt-6 p-6 bg-green-50 rounded-xl shadow-md max-w-xl mx-auto">
           <h3 className="text-green-700 font-bold text-xl mb-4">
             Your Yearly Carbon Footprint: {result.footprint.toFixed(1)} tons CO₂
@@ -167,19 +136,13 @@ export default function ActionPlan() {
 
           {/* AI personalized tips */}
           <div className="mt-6 p-4 bg-white border-l-4 border-green-600 rounded">
-            <h4 className="font-semibold text-green-700 mb-2">
-              🤖 AI Personalized Tips:
-            </h4>
-            <p className="text-gray-700 whitespace-pre-line">
-              {result.ai_tips}
-            </p>
+            <h4 className="font-semibold text-green-700 mb-2">🤖 AI Personalized Tips:</h4>
+            <p className="text-gray-700 whitespace-pre-line">{result.ai_tips}</p>
           </div>
         </div>
       )}
 
-      {result && result.error && !loading && (
-        <p className="text-red-500 mt-4">{result.error}</p>
-      )}
+      {result && result.error && <p className="text-red-500 mt-4">{result.error}</p>}
     </div>
   );
 }
